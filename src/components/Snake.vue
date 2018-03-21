@@ -2,6 +2,7 @@
   <div class="vue-container">
 	  <div class="game-container" :class="{ gameOver : gameStatus === 'gameOver' }">
 		  <div class="message" v-if="gameStatus === 'gameOver'">GAMEOVER</div>
+      <div class="score">Score: {{score}}</div>
 		  <div class="case" v-for="n in cases" :class='{ snake : snake.indexOf(n) !== -1, fruits : fruits.indexOf(n) !== -1 }'></div>
 	  </div>
   </div>
@@ -14,15 +15,16 @@ export default {
     return {
       msg: 'Welcome to Snake',
       register_key : 'down',
-      w : 20,
-      h : 20,
+      w : 8,
+      h : 8,
       s : 10,
       snake_start_size : 2,
       snake : [],
       fruits : [10, 20, 40],
       interval : '',
-      gameStatus : 'gameOver'
-      //gameStatus : 'playing',
+      gameStatus : 'gameOver',
+      speed : 1,
+      score: 0,
     }
   },
   computed : {
@@ -54,22 +56,22 @@ export default {
 			var dir = this.register_key;
 			switch(dir) {
 				 case 'right':
-						if( (this.snake[0] + 1) % this.w === 1 ){
-					  		return (this.snake[0] + 1) - this.w
+						if( (this.snake[0] + this.speed) % this.w === 1 ){
+					  		return (this.snake[0] + this.speed) - this.w
 						}else{
-							return this.snake[0] + 1
+							return this.snake[0] + this.speed
 						}
 				 case 'left':
-					  if( (this.snake[0] - 1) % this.w === 0 ){
-					  		return (this.snake[0] - 1) + this.w
+					  if( (this.snake[0] - this.speed) % this.w === 0 ){
+					  		return (this.snake[0] - this.speed) + this.w
 						}else{
-							return this.snake[0] - 1
+							return this.snake[0] - this.speed
 						}
 				 case 'up':
 						if( this.snake[0] - this.w < 0 ){
 					  		return this.snake[0] - this.w + this.cases
 						}else{
-							return this.snake[0] - this.w
+							return this.snake[0] - this.h
 						}
 				 case 'down':
 						if( this.snake[0] + this.h > this.cases ){
@@ -85,10 +87,13 @@ export default {
 			if( this.snake.indexOf(this.snake[0], 1) !== -1 ){
 				this.gameStatus = 'gameOver'
 				return false
-			}
+      }
+      if (this.speed === 0) {
+        return true
+      }
 			this.snake.unshift(this.move());
 			if( this.fruits.indexOf(this.snake[0]) === -1 ){
-				this.snake.splice(-1, 1);
+        this.snake.splice(-1, 1);
 			}else{
 				this.fruits.splice(this.fruits.indexOf(this.snake[0]), 1)
 			}
@@ -99,7 +104,8 @@ export default {
 				while(this.snake.indexOf(new_apple) !== -1){
 					new_apple = Math.round(Math.random() * this.cases)
 				}
-				this.fruits.push(new_apple)
+        this.fruits.push(new_apple)
+        this.score += 10
 			}
 		},
     gameTurn () {
@@ -114,7 +120,7 @@ export default {
 		},
     launchGame () {
 			this.gameStatus = 'playing'
-			this.setSizes(8, 10)
+			this.setSizes(this.w, this.s)
 			this.initSnake()
 			var self = this
 			this.interval = setInterval(function(){
@@ -149,14 +155,17 @@ export default {
 }
 </script>
 
-<style>
-:root{
+<style scoped>
+/* :root{
   --caseSize : 10px;
 	--gameSize : 80px;
 	--snakeColor : forestgreen;
-}
+} */
 
 .vue-container {
+  --caseSize : 40px;
+	--gameSize : 320px;
+	--snakeColor : forestgreen;  
   font-family: sans-serif;
 }
 .vue-container .game-container {
@@ -178,13 +187,19 @@ export default {
   font-weight: 900;
   text-shadow: 2px 2px 0 white, -2px 2px 0 white, 2px -2px 0 white, -2px -2px 0 white;
 }
+.vue-container .game-container .score {
+  transform: translatex(0%) translatey(-50%);
+  font-size: 20px;
+  font-weight: 900;
+  text-shadow: 2px 2px 0 white, -2px 2px 0 white, 2px -2px 0 white, -2px -2px 0 white;
+}
 .vue-container .game-container .case {
   width: var(--caseSize);
   height: var(--caseSize);
   background-color: lightgrey;
   display: inline-block;
-  padding: 0;
-  margin: 0;
+  padding: 0px 0px 0px 0px;
+  margin: -40px 0px 0px 0px;
   box-sizing: border-box;
   border: 1px solid white;
 }

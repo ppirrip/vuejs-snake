@@ -1,7 +1,5 @@
 <template>
   <div id="app">
-    <!-- img src="./assets/logo.png" -->
-    <!-- HelloWorld/ -->
     <Snake></Snake>
   </div>
 </template>
@@ -13,7 +11,6 @@ import Snake from './components/Snake'
 export default {
   name: 'App',
   components: {
-    //HelloWorld,
     Snake,
   }
 }
