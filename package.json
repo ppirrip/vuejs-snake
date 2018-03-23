@@ -10,7 +10,9 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "vue": "^2.5.2"
+    "sweetalert": "^2.1.0",
+    "vue": "^2.5.2",
+    "vue-mqtt": "^2.0.2"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

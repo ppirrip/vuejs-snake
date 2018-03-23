@@ -6,13 +6,23 @@
 
 <script>
 //import HelloWorld from './components/HelloWorld'
+import sweetalert from 'sweetalert';
 import Snake from './components/Snake'
 
 export default {
   name: 'App',
   components: {
     Snake,
-  }
+  },
+  mounted () {
+    // might need to use wildcard here later ...
+    this.$mqtt.subscribe('ppirrip/feeds/aiidex.command')
+  },
+  data() { 
+    return {
+      cmds: []
+    }
+  },
 }
 </script>
 

@@ -2,7 +2,8 @@
   <div class="vue-container">
 	  <div class="game-container" :class="{ gameOver : gameStatus === 'gameOver' }">
 		  <div class="message" v-if="gameStatus === 'gameOver'">GAMEOVER</div>
-      <div class="score">Score: {{score}}</div>
+      <div class="score">register_key (mqtt): {{register_key}}</div>
+			<div class="score">Score: {{score}}</div>
 		  <div class="case" v-for="n in cases" :class='{ snake : snake.indexOf(n) !== -1, fruits : fruits.indexOf(n) !== -1 }'></div>
 	  </div>
   </div>
@@ -24,7 +25,7 @@ export default {
       interval : '',
       gameStatus : 'gameOver',
       speed : 1,
-      score: 0,
+			score: 0,
     }
   },
   computed : {
@@ -32,7 +33,7 @@ export default {
 			var res = this.w * this.h;
 			return res;
 		}
-  },
+	},
   methods : {
     changeGameSize (val) {
 			document.documentElement.style.setProperty('--gameSize', val + 'px');
@@ -133,6 +134,9 @@ export default {
 		}
   },
   mounted () {
+		// external input also:
+		this.$mqtt.subscribe('ppirrip/feeds/aiidex.command')
+
     this.msg += ' mounted'
     this.launchGame();
     var self = this;
@@ -151,7 +155,15 @@ export default {
 				self.launchGame()
 			}
 		});
-  }
+	},
+	mqtt : {
+		'ppirrip/feeds/aiidex.command' (data,topic) {
+			var msg = JSON.parse(String.fromCharCode.apply(null, data).replace(/\'/g,""));
+			var cmd = msg['payload']['payload']
+			this.register_key = cmd[0]
+			this.speed = 0
+		},
+	},
 }
 </script>
 
