@@ -1,4 +1,5 @@
 # vuejs-snake
+Updated codepen example is [here](https://codepen.io/ppirrip/pen/xWdNZN?editors=0010)
 
 > A Vue.js project
 
