@@ -159,9 +159,20 @@ export default {
 	mqtt : {
 		'ppirrip/feeds/aiidex.command' (data,topic) {
 			var msg = JSON.parse(String.fromCharCode.apply(null, data).replace(/\'/g,""));
-			var cmd = msg['payload']['payload']
-			this.register_key = cmd[0]
-			this.speed = 0
+			var cmd = msg['payload']['payload'][0]
+			
+			if (cmd == "forward") {
+				this.register_key = 'up'
+			} else if (cmd == "reverse") {
+				this.register_key = 'down'
+			} else if (cmd == "left") {
+				this.register_key = 'left'
+			} else if (cmd == "right") {
+				this.register_key = 'right'
+			}
+			
+			//this.register_key = cmd
+			//this.speed = 0
 		},
 	},
 }
